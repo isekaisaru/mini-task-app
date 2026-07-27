@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  title: MyString
+  duration_minutes: 1
+  completed: false
+  scheduled_on: 2026-07-20
+
+two:
+  user: two
+  title: MyString
+  duration_minutes: 1
+  completed: false
+  scheduled_on: 2026-07-20

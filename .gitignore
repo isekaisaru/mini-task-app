@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Rails logs and temporary files
+/backend/log/*
+!/backend/log/.keep
+/backend/tmp/*
+!/backend/tmp/.keep
+/backend/storage/*
+!/backend/storage/.keep
+
+# Rails credentials
+/backend/config/master.key
+
+# Database files
+/backend/db/*.sqlite3
+/backend/db/*.sqlite3-*
+
+# Ruby
+/backend/.bundle
+/backend/vendor/bundle
+
+# Test coverage
+/backend/coverage/
+
+# Node
+/frontend/node_modules/
+/frontend/.next/
