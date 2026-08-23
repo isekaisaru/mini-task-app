@@ -1,8 +1,12 @@
 import type { Task } from "./types/task";
 import TaskForm from "./components/TaskForm";
+import DeleteButton from "./components/DeleteButton";
+import UpdateButton from "./components/UpdateButton";
 
 async function getTasks(): Promise<Task[]> {
-  const res = await fetch("http://localhost:3001/tasks");
+  const res = await fetch("http://localhost:3001/tasks", {
+    cache: "no-store",
+  });
 
   if (!res.ok) {
     throw new Error("タスクを取得できませんでした");
@@ -21,7 +25,11 @@ export default async function Home() {
       <ul>
         {tasks.length === 0 && <li>タスクはありません</li>}
         {tasks.map((task) => (
-          <li key={task.id}>{task.title}</li>
+          <li key={task.id}>
+            {task.title}
+            <DeleteButton id={task.id} />
+            <UpdateButton id={task.id} title={task.title} />
+          </li>
         ))}
       </ul>
 
