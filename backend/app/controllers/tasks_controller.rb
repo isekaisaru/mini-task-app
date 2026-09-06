@@ -1,6 +1,8 @@
 class TasksController < ApplicationController
   def index
-    render json: Task.all
+    user = User.find_by(id: session[:user_id])
+    return render json: {errors: "ログインしていません。"} ,status: :unauthorized unless user
+    render json: user.tasks
   end
 
   def show

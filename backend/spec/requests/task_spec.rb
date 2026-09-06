@@ -2,10 +2,10 @@ require "rails_helper"
 
 RSpec.describe "Tasks", type: :request do
   describe "GET /tasks" do
-    it "正常に取得ができる" do
+    it "ログインしていないと401が返ってくる" do
       get "/tasks"
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 
