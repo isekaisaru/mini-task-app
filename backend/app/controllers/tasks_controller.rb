@@ -6,7 +6,9 @@ class TasksController < ApplicationController
   end
 
   def show
-    task = Task.find(params[:id])
+    user = User.find_by(id: session[:user_id])
+    return render json: {errors: "ログインしていません。"} ,status: :unauthorized unless user
+    task = user.tasks.find(params[:id])
     render json: task
   end
 
