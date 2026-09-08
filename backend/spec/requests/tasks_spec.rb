@@ -36,6 +36,23 @@ RSpec.describe "Tasks", type: :request do
       # Assert 他の人のタスクなので 404( Not Found ) になることを期待する
       expect(response).to have_http_status(:not_found)
     end
+  end
 
+  describe "DELETE /tasks/:id" do
+    it "他のユーザーのタスクは削除できない"do
+    # Arrange　AさんとBさんを作り、　Bさんのタスクを作る
+    User.create!(email: "test@example.com", password: "password")
+    user_b = User.create!(email: "test2@example.com", password: "password")
+    task_b_1 = Task.create!(user: user_b, title: "Task B1", scheduled_on: Date.today)
+    
+    # Act Aさんでログインして、Bさんのタスクを削除する
+    post "/sessions", params: {email: "test@example.com",password: "password"}
+    delete "/tasks/#{task_b_1.id}"
+  
+    # Assert 削除できず404を返す
+    expect(response).to have_http_status(:not_found)
+    # Assert BのタスクがDBに残っていることを確認する
+    expect(Task.exists?(task_b_1.id)).to be_truthy
+    end  
   end
 end

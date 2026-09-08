@@ -33,13 +33,10 @@ class TasksController < ApplicationController
     end
 
     def destroy
-      # URLからTaskのIDを受け取る
-      task = Task.find(params[:id])
-
-      # 見つけたTaskをDBから削除する
+      user = User.find_by(id: session[:user_id])
+      return render json: {errors: "ログインしていません。"} ,status: :unauthorized unless user
+      task = user.tasks.find(params[:id])
       task.destroy
-      
-      # 削除成功のレスポンスを返す
       render json: { message: "Task deleted" }, status: :ok
     end
       
