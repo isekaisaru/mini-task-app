@@ -55,4 +55,20 @@ RSpec.describe "Tasks", type: :request do
     expect(Task.exists?(task_b_1.id)).to be_truthy
     end  
   end
+
+  describe " PATCH /tasks/:id" do
+    it "他のユーザーのTaskは更新できない" do
+      # Arrange
+     User.create!(email: "test@example.com", password: "password")
+      user_b = User.create!(email: "test2@example.com", password: "password")
+      task_b_1 = Task.create!(user: user_b, title: "Task B1", scheduled_on: Date.today)
+      # Act AさんでログインしてBさんのタスクを更新しようとする
+      post "/sessions", params: {email: "test@example.com",password: "password"}
+      patch "/tasks/#{task_b_1.id}", params: {task: {title: "Task B1 Updated"}}
+      # Assert 他の人のタスクなので404(Not Found)が返ってくる
+      expect(response).to have_http_status(:not_found)
+      # Assert DBに変更がないことを確認
+      expect(Task.find(task_b_1.id).title).to_not eq("Task B1 Updated")
+    end
+  end
 end
