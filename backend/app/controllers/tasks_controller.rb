@@ -13,8 +13,9 @@ class TasksController < ApplicationController
   end
 
   def create
-    task = Task.new(task_params)
-
+    user = User.find_by(id: session[:user_id])
+    return render json: {errors: "ログインしていません。"} ,status: :unauthorized unless user
+    task = user.tasks.new(task_params)
     if task.save
       render json: task, status: :created
     else
@@ -50,7 +51,6 @@ class TasksController < ApplicationController
       :title,
       :duration_minutes,
       :scheduled_on,
-      :user_id,
       :completed
     )
 

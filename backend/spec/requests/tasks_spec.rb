@@ -71,4 +71,22 @@ RSpec.describe "Tasks", type: :request do
       expect(Task.find(task_b_1.id).title).to_not eq("Task B1 Updated")
     end
   end
+
+  describe " POST /tasks" do
+    it "Aさんでログインしているなら、絶対に「Aさんのタスク」として作られる（他人の名義では作れない）" do
+      #Arrange AさんBさん作成
+      user_a = User.create!(email: "test@example.com", password: "password")
+      user_b = User.create!(email: "test2@example.com", password: "password")
+      # Act  Aさんがログインし、わざとBさんのIDを指定してタスクを作成する
+      post "/sessions", params: {email: "test@example.com",password: "password"}
+      post "/tasks", params: {task: {title: "Task A1", scheduled_on: Date.today, user_id: user_b.id}}
+      
+      # Assert　　レスポンスは 201 Created で作れること　でも、作られたタスクの持ち主（task.user_id）は、Bではなく必ず「Aさん（ログインしている人）」になっていること！
+      expect(response).to have_http_status(:created)
+      expect(JSON.parse(response.body)['user_id']).to eq(user_a.id) # ここが超重要！
+
+      
+      
+    end
+  end
 end
