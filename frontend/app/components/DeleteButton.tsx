@@ -12,6 +12,7 @@ export default function DeleteButton({ id }: Props) {
     const handleDelete = async () => {
         const res = await fetch(`http://localhost:3001/tasks/${id}`, {
             method: "DELETE",
+            credentials: "include",
         });
 
         if (res.ok) {
