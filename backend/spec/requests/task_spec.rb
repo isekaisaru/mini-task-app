@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "Tasks", type: :request do
+  let(:valid_origin_header) do
+    { "Origin" => "http://localhost:3000" }
+  end
+
   describe "GET /tasks" do
     it "ログインしていないと401が返ってくる" do
       get "/tasks"
@@ -12,7 +16,7 @@ RSpec.describe "Tasks", type: :request do
   describe "POST /tasks" do
     context "正しい値を送った場合" do
       it "Taskを1件作成できる" do
-        user = User.create!(
+        User.create!(
           email: "test@example.com",
           password: "password"
         )
@@ -23,12 +27,14 @@ RSpec.describe "Tasks", type: :request do
           scheduled_on: "2026-08-05",
           completed: false
         }
+        post "/sessions", params: { email: "test@example.com", password: "password" },
+        headers: valid_origin_header
 
-        post "/sessions", params: { email: "test@example.com", password: "password" }
         expect(response).to have_http_status(:success)
 
         expect {
-          post "/tasks", params: { task: task_params }
+          post "/tasks", params: { task: task_params },
+          headers: valid_origin_header
         }.to change(Task, :count).by(1)
 
         expect(response).to have_http_status(:created)
@@ -37,7 +43,7 @@ RSpec.describe "Tasks", type: :request do
 
     context "タイトルが空の場合" do
       it "Taskを作成できず422を返す" do
-        user = User.create!(
+        User.create!(
           email: "invalid-task-20260807@example.com",
           password: "password"
         )
@@ -49,11 +55,13 @@ RSpec.describe "Tasks", type: :request do
           completed: false
         }
 
-        post "/sessions", params: { email: "invalid-task-20260807@example.com", password: "password" }
+        post "/sessions", params: { email: "invalid-task-20260807@example.com", password: "password" },
+        headers: valid_origin_header
         expect(response).to have_http_status(:success)
 
         expect {
-          post "/tasks", params: { task: task_params }
+          post "/tasks", params: { task: task_params },
+          headers: valid_origin_header
         }.not_to change(Task, :count)
 
         expect(response).to have_http_status(:unprocessable_content)
@@ -70,7 +78,8 @@ RSpec.describe "Tasks", type: :request do
         }
         # Act & Assert
         expect {
-          post "/tasks", params: { task: task_params }
+          post "/tasks", params: { task: task_params },
+          headers: valid_origin_header
         }.not_to change(Task, :count)
 
         expect(response).to have_http_status(:unauthorized)

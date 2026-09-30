@@ -11,9 +11,10 @@ class SessionsController < ApplicationController
   end
 
   def me
+    response.headers["Cache-Control"] = "no-store"
     user = User.find_by(id: session[:user_id])
     if user
-      render json: user, status: :ok
+      render json: {id: user.id, email: user.email}, status: :ok
     else
       render json: {error: "ログインしていません。"}, status: :unauthorized
     end
