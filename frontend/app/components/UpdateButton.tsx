@@ -15,6 +15,7 @@ export default function UpdateButton({ id, title }: Props) {
     const handleUpdate = async () => {
         const res = await fetch(`http://localhost:3001/tasks/${id}`, {
             method: "PATCH",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
