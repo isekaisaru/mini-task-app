@@ -1,11 +1,20 @@
 import type { Task } from "./types/task";
+import { headers } from "next/headers";
 import TaskForm from "./components/TaskForm";
 import DeleteButton from "./components/DeleteButton";
 import UpdateButton from "./components/UpdateButton";
 
 async function getTasks(): Promise<Task[]> {
+  const requestsHeaders = await headers();
+  const cookieHeader = requestsHeaders.get("Cookie");
+
   const res = await fetch("http://localhost:3001/tasks", {
     cache: "no-store",
+    headers: cookieHeader
+      ? {
+        Cookie: cookieHeader,
+      }
+      : {},
   });
 
   if (!res.ok) {

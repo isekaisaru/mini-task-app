@@ -18,12 +18,12 @@ export default function TaskForm() {
             title,
             duration_minutes: Number(durationMinutes),
             scheduled_on: scheduledOn,
-            user_id: 1,
         };
         try {
 
             const res = await fetch('http://localhost:3001/tasks', {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
