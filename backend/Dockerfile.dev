@@ -6,6 +6,7 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
     build-essential \
     libsqlite3-dev \
+    libpq-dev \
     sqlite3 \
     libyaml-dev \
     pkg-config && \
