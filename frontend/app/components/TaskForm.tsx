@@ -9,6 +9,7 @@ export default function TaskForm() {
     const [message, setMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -21,7 +22,7 @@ export default function TaskForm() {
         };
         try {
 
-            const res = await fetch('http://localhost:3001/tasks', {
+            const res = await fetch(`${apiUrl}/tasks`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

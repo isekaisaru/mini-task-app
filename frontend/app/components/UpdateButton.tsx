@@ -11,9 +11,10 @@ type Props = {
 export default function UpdateButton({ id, title }: Props) {
     const router = useRouter();
     const [editedTitle, setEditedTitle] = useState(title);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
     const handleUpdate = async () => {
-        const res = await fetch(`http://localhost:3001/tasks/${id}`, {
+        const res = await fetch(`${apiUrl}/tasks/${id}`, {
             method: "PATCH",
             credentials: "include",
             headers: {
