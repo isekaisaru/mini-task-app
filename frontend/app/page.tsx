@@ -5,10 +5,11 @@ import DeleteButton from "./components/DeleteButton";
 import UpdateButton from "./components/UpdateButton";
 
 async function getTasks(): Promise<Task[]> {
+  const apiUrl = process.env.API_URL ?? "http://localhost:3001";
   const requestsHeaders = await headers();
   const cookieHeader = requestsHeaders.get("Cookie");
 
-  const res = await fetch("http://localhost:3001/tasks", {
+  const res = await fetch(`${apiUrl}/tasks`, {
     cache: "no-store",
     headers: cookieHeader
       ? {
