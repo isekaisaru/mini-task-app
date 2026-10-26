@@ -5,7 +5,7 @@ describe("Error", () => {
     it("エラーの見出しを表示する", () => {
         render(<Error />);
         const heading = screen.getByRole("heading", {
-            name: "存在しない見出し",
+            name: "エラーが発生しました",
             level: 1,
         });
         expect(heading).toBeInTheDocument();
