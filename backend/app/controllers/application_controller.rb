@@ -13,7 +13,7 @@ class ApplicationController < ActionController::API
     actual_origin = request.headers["Origin"]
 
     # 許可する Origin (環境に合わせて書き換える)
-    allowed_origin = "http://localhost:3000"
+    allowed_origin = ENV.fetch("FRONTEND_ORIGIN", "http://localhost:3000")
 
     # もし許可されたOrignと一致しない(またはOriginがない)なら403 Forbiddenを返す
     unless actual_origin == allowed_origin
