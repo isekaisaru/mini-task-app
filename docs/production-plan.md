@@ -36,3 +36,34 @@ NEXT_PUBLIC_の値はブラウザへ公開される。
 API_URLはNext.jsサーバーからRailsへ接続するときに使う。
 NEXT_PUBLIC_API_URLはブラウザからRailsへ接続するときに使う。
 Docker内部のbackendという名前はブラウザでは使えないため、接続先を分ける。
+
+## 本番のCookieと配置構成
+
+現在のセッションCookieはDomain未指定であり、
+Railsの応答元ホストだけに送信される。
+
+Task一覧取得ではNext.jsが受信したCookieをRailsへ転送する。
+そのため、ブラウザからNext.jsへもセッションCookieが届く必要がある。
+
+### 検討する構成
+
+- 同じ公開ホストの配下で画面とAPIを振り分ける
+  - 例: https://task.example.com と同ホストの /api
+  - APIへのプロキシとパス設定が必要
+
+- FrontendとAPIを共通の親ドメインのサブドメインにする
+  - CookieのDomain設定と共有範囲の検討が必要
+  - CORSとOrigin検証も必要
+
+別々のサービス既定ドメインへそのまま配置する場合、
+現在のCookie転送方式では認証が成立するとは限らない。
+
+### 次に決めること
+
+- 独自ドメインを用意するか
+- 公開ホストとAPIへの通信経路
+- 選んだ構成でログインと一覧取得を検証する方法
+
+### RailsがAPI側のホスト専用Cookieを発行した場合、なぜNext.jsからの一覧取得で認証できなくなるのでしょうか？
+ - CookieはAPI側のホストにだけ送られるため、別ホストのNext.jsには届かない。
+- Next.jsは受信していないCookieをRailsへ転送できず、Railsがログイン中のユーザーを識別できない。
